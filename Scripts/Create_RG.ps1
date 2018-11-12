@@ -67,3 +67,7 @@ $nic = New-AzureRmNetworkInterface `
   -SubnetId $vnet.Subnets[0].Id `
   -PublicIpAddressId $pip.Id `
   -NetworkSecurityGroupId $nsg.Id
+
+New-AzureRmResourceGroupDeployment -Name nexusDeployment -ResourceGroupName $ResourceGroup `
+  -TemplateUri https://github.com/amitanilsinha/NEXUS/blob/master/Scripts/azuredeploy_linux.json `
+  -storageAccountType Standard_GRS
