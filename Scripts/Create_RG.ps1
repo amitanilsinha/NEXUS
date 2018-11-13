@@ -3,7 +3,8 @@ Connect-AzureRmAccount
 #ssh-keygen -t rsa -b 2048
 #Variables
 $ResourceGroup="NEWNEXUSRG"
-$Location="centralindia"
+$Location="EASTUS"
+$storageAccountType="Standard_GRS"
 #Create an Azure resource group
 New-AzureRmResourceGroup -Name $ResourceGroup -Location $Location
 
@@ -11,22 +12,6 @@ New-AzureRmResourceGroup -Name $ResourceGroup -Location $Location
 $subnetConfig = New-AzureRmVirtualNetworkSubnetConfig `
   -Name "mySubnet" `
   -AddressPrefix 192.168.1.0/24
-
-# Create a virtual network
-$vnet = New-AzureRmVirtualNetwork `
-  -ResourceGroupName $ResourceGroup `
-  -Location $Location `
-  -Name "myVNET" `
-  -AddressPrefix 192.168.0.0/16 `
-  -Subnet $subnetConfig
-
-# Create a public IP address and specify a DNS name
-$pip = New-AzureRmPublicIpAddress `
-  -ResourceGroupName  $ResourceGroup `
-  -Location $Location `
-  -AllocationMethod Static `
-  -IdleTimeoutInMinutes 4 `
-  -Name "mypublicdns$(Get-Random)"
 
 # Create an inbound network security group rule for port 443
 $nsgRuleSSH = New-AzureRmNetworkSecurityRuleConfig `
@@ -59,15 +44,6 @@ $nsg = New-AzureRmNetworkSecurityGroup `
   -Name "myNetworkSecurityGroup" `
   -SecurityRules $nsgRuleSSH,$nsgRuleWeb
 
-# Create a virtual network card and associate with public IP address and NSG
-$nic = New-AzureRmNetworkInterface `
-  -Name "myNic" `
-  -ResourceGroupName $ResourceGroup `
-  -Location $Location `
-  -SubnetId $vnet.Subnets[0].Id `
-  -PublicIpAddressId $pip.Id `
-  -NetworkSecurityGroupId $nsg.Id
+Select-AzureRmSubscription -SubscriptionName 01a345dc-4adf-40ab-94ae-4d15d0058a85
 
-New-AzureRmResourceGroupDeployment -Name nexusDeployment -ResourceGroupName $ResourceGroup `
-  -TemplateUri https://github.com/amitanilsinha/NEXUS/blob/master/Scripts/azuredeploy_linux.json `
-  -storageAccountType Standard_GRS
+New-AzureRmResourceGroupDeployment -Name NexusDeployment -ResourceGroupName NEWNEXUSRG  -TemplateUri https://raw.githubusercontent.com/amitanilsinha/NEXUS/master/Scripts/azuredeploy_linux.json
