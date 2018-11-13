@@ -29,12 +29,9 @@
     "publicIPAddressType": "Dynamic",
     "vmName": "MyUbuntuVM",
     "vmSize": "Standard_A1",
-    "virtualNetworkName": "myVNET",
-    "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
-    "networkSecurityGroupName": "networkSecurityGroup1",
+    "virtualNetworkName": "MyVNET",
     "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
-    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
-    "apiVersion": "2015-06-15"
+    "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
   },
   "resources": [
     {
