@@ -10,8 +10,10 @@
     },
     "dnsLabelPrefix": {
       "value": "GEN-UNIQUE"
-      "sshKeyData": {
+    },  
+    "sshKeyData": {
       "value": "GEN-SSH-PUB-KEY"
+    }
     }
   }
 }
