@@ -52,7 +52,7 @@
     "storageAccountType": "Standard_LRS",
     "publicIPAddressName": "mypublicdns1112170688",
     "publicIPAddressType": "Dynamic",
-    "vmName": "NexusVM",
+    "vmName": "MyUbuntuVM",
     "vmSize": "Standard_A1",
     "virtualNetworkName": "myVNET",
     "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
