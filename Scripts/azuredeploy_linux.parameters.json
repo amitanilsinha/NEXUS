@@ -3,10 +3,14 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "adminUsername": {
-      "value": "azureuser"
+      "value": "ghuser"
     },
-    "sshKeyData": {
-      "value": "GEN-SSH-PUB-KEY"
+    "adminPassword": {
+      "value": "GEN-PASSWORD"
+    },
+    "dnsLabelPrefix": {
+      "value": "GEN-UNIQUE"
     }
   }
 }
+
