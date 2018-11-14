@@ -3,11 +3,11 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "rgName":{
-        "value": "ResourceGroup1"
+        "value": "NEWNEXUSRG1"
       },
 
       "rgLocation":{
-        "value": "West Europe"
+        "value": "EASTUS"
       }
   
   
