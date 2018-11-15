@@ -1,0 +1,70 @@
+- name: Create VM
+  hosts: localhost
+  connection: local
+  tasks:
+  - name: Create resource group
+    azure_rm_resourcegroup:
+      name: Demo_RG
+      location: Centralus
+  - name: Create virtual network
+    azure_rm_virtualnetwork:
+      resource_group: Demo_RG
+      name: myVnet2
+      address_prefixes: "10.0.0.0/16"
+  - name: Add subnet
+    azure_rm_subnet:
+      resource_group: Demo_RG
+      name: mySubnet2
+      address_prefix: "10.0.1.0/24"
+      virtual_network: myVnet2
+  - name: Create public IP address
+    azure_rm_publicipaddress:
+      resource_group: Demo_RG
+      allocation_method: Static
+      name: myPublicIP
+    register: output_ip_address
+  - name: Dump public IP for VM which will be created
+    debug:
+      msg: "The public IP is {{ output_ip_address.state.ip_address }}."
+  - name: Create Network Security Group that allows SSH
+    azure_rm_securitygroup:
+      resource_group: Demo_RG
+      name: myNetworkSecurityGroup2
+      rules:
+        - name: SSH
+          protocol: Tcp
+          destination_port_range: 22
+          access: Allow
+          priority: 1001
+          direction: Inbound
+  - name: Create Network Security Group that allows http
+    azure_rm_securitygroup:
+      resource_group: Demo_RG
+      name: myNetworkSecurityGroup2
+      rules:
+        - name: SSH
+          protocol: Tcp
+          destination_port_range: 80
+          access: Allow
+          priority: 1001
+          direction: Inbound
+  - name: Create virtual network inteface card
+    azure_rm_networkinterface:
+      resource_group: kunal_RG2
+      name: myNIC
+      virtual_network: myVnet2
+      subnet: mySubnet2
+      public_ip_name: myPublicIP2
+      security_group: myNetworkSecurityGroup2
+  - name: Create VM with defaults
+    azure_rm_virtualmachine:
+      resource_group: kunal_RG2
+      name: testvm10
+      vm_size: Standard_DS1_v2
+      admin_username: kmaldahiyar
+      admin_password: admin123
+      image:
+        offer: CentOS
+        publisher: OpenLogic
+        sku: '7.1'
+        version: latest
