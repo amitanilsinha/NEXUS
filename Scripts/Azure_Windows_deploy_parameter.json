@@ -10,12 +10,6 @@
     },
     "dnsLabelPrefix": {
       "value": "dnskunal"
-    },
-    "rgName":{
-        "value": "JANRG"
-    },
-    "rgLocation":{
-        "value": "East US"
     }
   }
 }
