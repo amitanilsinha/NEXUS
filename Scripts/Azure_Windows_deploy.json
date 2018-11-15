@@ -45,14 +45,14 @@
   },
   "variables": {
     "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'sawinvm')]",
-    "nicName": "nexusVMNic",
+    "nicName": "kunalVMNic",
     "addressPrefix": "10.0.0.0/16",
-    "subnetName": "nexusSubnet",
+    "subnetName": "kunalSubnet",
     "subnetPrefix": "10.0.0.0/24",
-    "publicIPAddressName": "nexusPublicIP",
-    "vmName": "SimpleWinVM",
-    "virtualNetworkName": "nexusMyVNET",
-	  "networkSecurityGroupName": "nexusnetworkSecurityGroup1",
+    "publicIPAddressName": "kunalPublicIP",
+    "vmName": "kunalVM",
+    "virtualNetworkName": "kunalMyVNET",
+	  "networkSecurityGroupName": "kunalnetworkSecurityGroup1",
     "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
   },
   "resources": [
