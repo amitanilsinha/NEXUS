@@ -273,7 +273,7 @@
                     "description": "This is the first rule",
                     "protocol": "Tcp",
                     "sourcePortRange": "80",
-                    "destinationPortRange": "9000",
+                    "destinationPortRange": "8081",
                     "sourceAddressPrefix": "*",
                     "destinationAddressPrefix": "*",
                     "access": "Allow",
