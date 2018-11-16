@@ -46,14 +46,14 @@
         },
         "softvmNamePrefix": {
         "type": "string",
-        "defaultValue": "Nxs",
+        "defaultValue": "Nx",
         "metadata": {
             "description": "Prefix to use for VM names"
         }
         },
         "jumpvmName": {
         "type": "string",
-        "defaultValue": "jvm",
+        "defaultValue": "jm",
         "metadata": {
             "description": "Prefix to use for VM names"
         }
