@@ -178,7 +178,6 @@
         "jumppublicIPAddressType": "Dynamic",
         "jumpstorageAccountType": "Standard_LRS",
         "NexusRulesname": "[toLower(concat(parameters('securityNexus'), uniqueString(resourceGroup().id)))]",
-        "artifactoryRulesname": "[toLower(concat(parameters('securityartifact'), uniqueString(resourceGroup().id)))]",
         "jumpnetworkSecurityGroupName": "[toLower(concat(parameters('jumpnetworknsg'), uniqueString(resourceGroup().id)))]",
         "jumpsubnetName": "publicsub",
         "lbpublicip": "[toLower(concat(parameters('publicIPAddressName'), uniqueString(resourceGroup().id)))]",
@@ -195,8 +194,7 @@
         "networkSecurityGroupName": "[toLower(concat(parameters('softnetworknsg'), uniqueString(resourceGroup().id)))]",
         "lbPoolID": "[concat(variables('lbID'),'/backendAddressPools/BackendPool1')]",
         "lbProbeIDj": "[concat(variables('lbID'),'/probes/Nexus')]",
-        "lbProbeIDa": "[concat(variables('lbID'),'/probes/artifactory')]"
-    
+        
     },
     "resources": [
         {
