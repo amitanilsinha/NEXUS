@@ -20,6 +20,13 @@
         "description": "Admin username"
       }
     },
+   "securitynexus": {
+            "type": "string",
+            "defaultValue": "nexus",
+            "metadata": {
+                "description": "Size of the VM"
+            }
+   },
     "jumpadminUsername": {
       "type": "string",
       "metadata": {
