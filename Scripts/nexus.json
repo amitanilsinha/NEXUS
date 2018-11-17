@@ -272,7 +272,7 @@
                 "properties": {
                     "description": "This is the first rule",
                     "protocol": "Tcp",
-                    "sourcePortRange": "80",
+                    "sourcePortRange": "8081",
                     "destinationPortRange": "8081",
                     "sourceAddressPrefix": "*",
                     "destinationAddressPrefix": "*",
@@ -280,21 +280,8 @@
                     "priority": 115,
                     "direction": "Inbound"
                 }
-                },
-                {
-                "name": "artifactory",
-                "properties": {
-                    "description": "This is the first rule",
-                    "protocol": "Tcp",
-                    "sourcePortRange": "9090",
-                    "destinationPortRange": "9000",
-                    "sourceAddressPrefix": "*",
-                    "destinationAddressPrefix": "*",
-                    "access": "Allow",
-                    "priority": 125,
-                    "direction": "Inbound"
                 }
-                }
+                
             ]
             }
         },
