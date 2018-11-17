@@ -308,30 +308,7 @@
             }
             
         },
-        {
-        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
-        "name": "[concat(variables('networkSecurityGroupName'), '/', variables('artifactoryRulesname'))]",
-        "apiVersion": "2018-02-01",
-        "location": "[resourceGroup().location]",
-        "comments": "Security rules for Artifactory",
-        "scale": null,
-        "dependsOn": [
-            "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
-        ],
-        "properties": {
-            "provisioningState": "Succeeded",
-            "protocol": "*",
-            "sourcePortRange": "*",
-            "destinationPortRange": "8081",
-            "sourceAddressPrefix": "*",
-            "destinationAddressPrefix": "*",
-            "access": "Allow",
-            "priority": 135,
-            "direction": "Inbound"
-        }
         
-    },
-    
         {
             "apiVersion": "2018-02-01",
             "type": "Microsoft.Network/networkSecurityGroups",
@@ -527,25 +504,6 @@
                 }
                 }
             }, 
-            {
-                "name": "artifactory",
-                "properties": {
-                "frontendIPConfiguration": {
-                    "id": "[variables('frontEndIPConfigID')]"
-                },
-                "backendAddressPool": {
-                    "id": "[variables('lbPoolID')]"
-                },
-                "protocol": "Tcp",
-                "frontendPort": 8080,
-                "backendPort": 8081,
-                "enableFloatingIP": false,
-                "idleTimeoutInMinutes": 5,
-                "probe": {
-                    "id": "[variables('lbProbeIDa')]"
-                }
-                }
-            }
             
             ],
             "probes": [
