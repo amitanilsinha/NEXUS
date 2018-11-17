@@ -299,7 +299,7 @@
                 "provisioningState": "Succeeded",
                 "protocol": "*",
                 "sourcePortRange": "*",
-                "destinationPortRange": "9000",
+                "destinationPortRange": "8081",
                 "sourceAddressPrefix": "*",
                 "destinationAddressPrefix": "*",
                 "access": "Allow",
