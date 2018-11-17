@@ -178,7 +178,6 @@
         "jumppublicIPAddressType": "Dynamic",
         "jumpstorageAccountType": "Standard_LRS",
         "NexusRulesname": "[toLower(concat(parameters('securityNexus'), uniqueString(resourceGroup().id)))]",
-        "artifactoryRulesname": "[toLower(concat(parameters('securityartifact'), uniqueString(resourceGroup().id)))]",
         "jumpnetworkSecurityGroupName": "[toLower(concat(parameters('jumpnetworknsg'), uniqueString(resourceGroup().id)))]",
         "jumpsubnetName": "publicsub",
         "lbpublicip": "[toLower(concat(parameters('publicIPAddressName'), uniqueString(resourceGroup().id)))]",
@@ -194,9 +193,8 @@
         "frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEnd')]",
         "networkSecurityGroupName": "[toLower(concat(parameters('softnetworknsg'), uniqueString(resourceGroup().id)))]",
         "lbPoolID": "[concat(variables('lbID'),'/backendAddressPools/BackendPool1')]",
-        "lbProbeIDj": "[concat(variables('lbID'),'/probes/Nexus')]",
-        "lbProbeIDa": "[concat(variables('lbID'),'/probes/artifactory')]"
-    
+        "lbProbeIDj": "[concat(variables('lbID'),'/probes/Nexus')]"
+        
     },
     "resources": [
         {
@@ -308,30 +306,7 @@
             }
             
         },
-        {
-        "type": "Microsoft.Network/networkSecurityGroups/securityRules",
-        "name": "[concat(variables('networkSecurityGroupName'), '/', variables('artifactoryRulesname'))]",
-        "apiVersion": "2018-02-01",
-        "location": "[resourceGroup().location]",
-        "comments": "Security rules for Artifactory",
-        "scale": null,
-        "dependsOn": [
-            "[resourceId('Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]"
-        ],
-        "properties": {
-            "provisioningState": "Succeeded",
-            "protocol": "*",
-            "sourcePortRange": "*",
-            "destinationPortRange": "8081",
-            "sourceAddressPrefix": "*",
-            "destinationAddressPrefix": "*",
-            "access": "Allow",
-            "priority": 135,
-            "direction": "Inbound"
-        }
         
-    },
-    
         {
             "apiVersion": "2018-02-01",
             "type": "Microsoft.Network/networkSecurityGroups",
@@ -510,147 +485,120 @@
             "loadBalancingRules": [
             {
                 "name": "LBRule",
-                "properties": {
-                "frontendIPConfiguration": {
-                    "id": "[variables('frontEndIPConfigID')]"
-                },
-                "backendAddressPool": {
-                    "id": "[variables('lbPoolID')]"
-                },
-                "protocol": "Tcp",
-                "frontendPort": 80,
-                "backendPort": 8080,
-                "enableFloatingIP": false,
-                "idleTimeoutInMinutes": 5,
-                "probe": {
-                    "id": "[variables('lbProbeIDj')]"
-                }
-                }
-            }, 
-            {
-                "name": "artifactory",
-                "properties": {
-                "frontendIPConfiguration": {
-                    "id": "[variables('frontEndIPConfigID')]"
-                },
-                "backendAddressPool": {
-                    "id": "[variables('lbPoolID')]"
-                },
-                "protocol": "Tcp",
-                "frontendPort": 8080,
-                "backendPort": 8081,
-                "enableFloatingIP": false,
-                "idleTimeoutInMinutes": 5,
-                "probe": {
-                    "id": "[variables('lbProbeIDa')]"
-                }
-                }
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[variables('frontEndIPConfigID')]"
+              },
+              "backendAddressPool": {
+                "id": "[variables('lbPoolID')]"
+              },
+              "protocol": "Tcp",
+              "frontendPort": 80,
+              "backendPort": 8081,
+              "enableFloatingIP": false,
+              "idleTimeoutInMinutes": 5,
+              "probe": {
+                "id": "[variables('lbProbeIDj')]"
+              }
             }
-            
-            ],
-            "probes": [
+          }
+          
+        ],
+        "probes": [
             {
-                "name": "Nexus",
-                "properties": {
+              "name": "jenkins",
+              "properties": {
                 "protocol": "Tcp",
                 "port": 8080,
                 "intervalInSeconds": 5,
                 "numberOfProbes": 2
-                }
-            },
-            {
-                "name": "artifactory",
-                "properties": {
-                "protocol": "Tcp",
-                "port": 8081,
-                "intervalInSeconds": 5,
-                "numberOfProbes": 2
-                }
-            }
-            
-            ]
-        }
-        },
-        {
-        "apiVersion": "2018-06-01",
-        "type": "Microsoft.Compute/virtualMachines",
-        "name": "[variables('vmNamePrefix')]",
-        "location": "[resourceGroup().location]",
-        "comments": "Creating VM for software server",
-        "dependsOn": [
-            "[resourceId('Microsoft.Storage/storageAccounts/', variables('softwarestorage'))]",
-            "[resourceId('Microsoft.Network/networkInterfaces/', variables('softnic'))]"
-        ],
-        "properties": {
-            "hardwareProfile": {
-            "vmSize": "Standard_DS1_v2"
-            },
-            "osProfile": {
-            "computerName": "[concat(variables('vmNamePrefix'))]",
-            "adminUsername": "[parameters('adminUsername')]",
-            "adminPassword": "[parameters('vmPassword')]",
-            "allowExtensionOperations": true
-            },
-            "storageProfile": {
-            "imageReference": {
-                "publisher": "[parameters('imagePublisher')]",
-                "offer": "[parameters('imageOffer')]",
-                "sku": "[parameters('imageSKU')]",
-                "version": "latest"
-            },
-            "osDisk": {
-                "createOption": "FromImage"
-            }
-            },
-            "networkProfile": {
-            "networkInterfaces": [
-                {
-                "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('softnic'))]"
-                }
-            ]
             }
         }
-    },
-        {
-        "apiVersion": "2018-06-01",
-        "type": "Microsoft.Compute/virtualMachines",
-        "name": "[concat(variables('jumpvmNamePrefix'))]",
-        "location": "[resourceGroup().location]",
-        "comments": "Creating Jump server",
-        "dependsOn": [
-            "[resourceId('Microsoft.Storage/storageAccounts/', variables('jumpstorage'))]",
-            "[resourceId('Microsoft.Network/networkInterfaces/', variables('jumpnic'))]"
-        
-        ],
-        "properties": {
-            "hardwareProfile": {
-            "vmSize": "Standard_DS1_v2"
-            },
-            "osProfile": {
-            "computerName": "[concat(variables('jumpvmNamePrefix'))]",
-            "adminUsername": "[parameters('jumpadminUsername')]",
-            "adminPassword": "[parameters('vmPassword')]"
-            },
-            "storageProfile": {
-            "imageReference": {
-                "publisher": "[parameters('imagePublisher')]",
-                "offer": "[parameters('imageOffer')]",
-                "sku": "[parameters('imageSKU')]",
-                "version": "latest"
-            },
-            "osDisk": {
-                "createOption": "FromImage"
-            }
-            },
-            "networkProfile": {
-            "networkInterfaces": [
-                {
-                "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('jumpnic'))]"
-                }
-            ]
-            }
-        }
-        }
-        
-    ]
+      ]
     }
+  },
+  {
+    "apiVersion": "2018-06-01",
+    "type": "Microsoft.Compute/virtualMachines",
+    "name": "[variables('vmNamePrefix')]",
+    "location": "[resourceGroup().location]",
+    "comments": "Creating VM for software server",
+    "dependsOn": [
+      "[resourceId('Microsoft.Storage/storageAccounts/', variables('softwarestorage'))]",
+      "[resourceId('Microsoft.Network/networkInterfaces/', variables('softnic'))]"
+    ],
+    "properties": {
+      "hardwareProfile": {
+        "vmSize": "Standard_DS1_v2"
+      },
+      "osProfile": {
+        "computerName": "[concat(variables('vmNamePrefix'))]",
+        "adminUsername": "[parameters('adminUsername')]",
+        "adminPassword": "[parameters('vmPassword')]",
+        "allowExtensionOperations": true
+      },
+      "storageProfile": {
+        "imageReference": {
+          "publisher": "[parameters('imagePublisher')]",
+          "offer": "[parameters('imageOffer')]",
+          "sku": "[parameters('imageSKU')]",
+          "version": "latest"
+        },
+        "osDisk": {
+          "createOption": "FromImage"
+        }
+      },
+      "networkProfile": {
+        "networkInterfaces": [
+          {
+            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('softnic'))]"
+          }
+        ]
+      }
+    }
+},
+    {
+    "apiVersion": "2018-06-01",
+    "type": "Microsoft.Compute/virtualMachines",
+    "name": "[concat(variables('jumpvmNamePrefix'))]",
+    "location": "[resourceGroup().location]",
+    "comments": "Creating Jump server",
+    "dependsOn": [
+      "[resourceId('Microsoft.Storage/storageAccounts/', variables('jumpstorage'))]",
+      "[resourceId('Microsoft.Network/networkInterfaces/', variables('jumpnic'))]"
+    
+    ],
+    "properties": {
+      "hardwareProfile": {
+        "vmSize": "Standard_DS1_v2"
+      },
+      "osProfile": {
+        "computerName": "[concat(variables('jumpvmNamePrefix'))]",
+        "adminUsername": "[parameters('jumpadminUsername')]",
+        "adminPassword": "[parameters('vmPassword')]"
+      },
+      "storageProfile": {
+        "imageReference": {
+          "publisher": "[parameters('imagePublisher')]",
+          "offer": "[parameters('imageOffer')]",
+          "sku": "[parameters('imageSKU')]",
+          "version": "latest"
+        },
+        "osDisk": {
+          "createOption": "FromImage"
+        }
+      },
+      "networkProfile": {
+        "networkInterfaces": [
+          {
+            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('jumpnic'))]"
+          }
+        ]
+      }
+    }
+  }
+  
+  
+
+]
+}
