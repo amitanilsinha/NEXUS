@@ -1,5 +1,5 @@
-$RG = "testinart"
-$location = "centralus"
+$RG = "NexusMain"
+$location = "East US"
 New-AzureRmResourceGroup -Name $RG -Location $location
 New-AzureRmResourceGroupDeployment -Name jenkinsaspaas -ResourceGroupName $RG `
  -TemplateUri "https://raw.githubusercontent.com/amitanilsinha/NEXUS/master/PAAS/nexusinfra.json" `
