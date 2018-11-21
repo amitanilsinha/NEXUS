@@ -2,7 +2,7 @@ $RG = "testinart"
 $location = "East US"
 New-AzureRmResourceGroup -Name $RG -Location $location
 New-AzureRmResourceGroupDeployment -Name Nexusaspaas -ResourceGroupName $RG `
- -TemplateUri "https://raw.githubusercontent.com/amitanilsinha/NEXUS/master/PAAS/nexusinfra.json" `
+ -TemplateUri "https://raw.githubusercontent.com/amitanilsinha/NEXUS/master/PAAS/Nexusinfra.json" `
 -TemplateParameterUri "https://raw.githubusercontent.com/amitanilsinha/NEXUS/master/PAAS/Nexusinfraparameter.json"
 
 $ipname = (Get-AzureRmResource  -ResourceGroupName $RG  -ResourceType Microsoft.Network/publicIPAddresses).Name[1]
