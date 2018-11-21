@@ -45,119 +45,32 @@ Configuration Installartifactory {
         Path = 'D:\artifactory-oss-6.5.2.zip'  
         Destination = 'D:\'  
         DependsOn = '[Script]Download-Software'  
-      
+      }
       Configuration ContosoWebsite
 {
   
   {
-   ## IIS URL Rewrite module download and install
-		Package UrlRewrite
-		{
-			#Install URL Rewrite module for IIS
-			DependsOn = "[WindowsFeature]WebServerRole"
-			Ensure = "Present"
-			Name = "IIS URL Rewrite Module 2"
-			Path = "http://download.microsoft.com/download/6/7/D/67D80164-7DD0-48AF-86E3-DE7A182D6815/rewrite_2.0_rtw_x64.msi"
-			Arguments = "/quiet"
-			ProductId = "EB675D0A-2C95-405B-BEE8-B42A65D23E11"
-		}
+    #Install the IIS Role
+    WindowsFeature IIS
+    {
+      Ensure = “Present”
+      Name = “Web-Server”
+    }
 
-		# Download and install the web site and content
-		Script DeployWebPackage
-		{
-			GetScript = {@{Result = "DeployWebPackage"}}
-			TestScript = {$false}
-			SetScript ={
-				[system.io.directory]::CreateDirectory("C:\WebApp")
-				$dest = "C:\WebApp\Site.zip" 
-				Remove-Item -path "C:\inetpub\wwwroot" -Force -Recurse -ErrorAction SilentlyContinue
-				Invoke-WebRequest $using:webDeployPackage -OutFile $dest
-				Add-Type -assembly "system.io.compression.filesystem"
-				[io.compression.zipfile]::ExtractToDirectory($dest, "C:\inetpub\wwwroot")
+    #Install ASP.NET 4.5
+    WindowsFeature ASP
+    {
+      Ensure = “Present”
+      Name = “Web-Asp-Net45”
+    }
 
-				## create 443 binding from the cert store
-				$certPath = 'cert:\LocalMachine\' + $using:certStoreName				
-				$certObj = Get-ChildItem -Path $certPath -DNSName $using:certDomain
-				if($certObj)
-				{
-					New-WebBinding -Name "Default Web Site" -IP "*" -Port 443 -Protocol https					
-					$certWThumb = $certPath + '\' + $certObj.Thumbprint 
-					cd IIS:\SSLBindings
-					get-item $certWThumb | new-item 0.0.0.0!443
-
-					# Create URL Rewrite Rules
-					cd c:
-					Add-WebConfigurationProperty -pspath 'MACHINE/WEBROOT/APPHOST' -filter "system.webserver/rewrite/GlobalRules" -name "." -value @{name='HTTP to HTTPS Redirect'; patternSyntax='ECMAScript'; stopProcessing='True'}
-					Set-WebConfigurationProperty -pspath 'MACHINE/WEBROOT/APPHOST' -filter "system.webserver/rewrite/GlobalRules/rule[@name='HTTP to HTTPS Redirect']/match" -name url -value "(.*)"
-					Add-WebConfigurationProperty -pspath 'MACHINE/WEBROOT/APPHOST' -filter "system.webserver/rewrite/GlobalRules/rule[@name='HTTP to HTTPS Redirect']/conditions" -name "." -value @{input="{HTTPS}"; pattern='^OFF$'}
-					Set-WebConfigurationProperty -pspath 'MACHINE/WEBROOT/APPHOST' -filter "system.webServer/rewrite/globalRules/rule[@name='HTTP to HTTPS Redirect']/action" -name "type" -value "Redirect"
-					Set-WebConfigurationProperty -pspath 'MACHINE/WEBROOT/APPHOST' -filter "system.webServer/rewrite/globalRules/rule[@name='HTTP to HTTPS Redirect']/action" -name "url" -value "https://{HTTP_HOST}/{R:1}"
-					Set-WebConfigurationProperty -pspath 'MACHINE/WEBROOT/APPHOST' -filter "system.webServer/rewrite/globalRules/rule[@name='HTTP to HTTPS Redirect']/action" -name "redirectType" -value "SeeOther"
-				}				
-			}
-			DependsOn  = "[WindowsFeature]WebServerRole"
-		}
-
-		## configure IIS Rewrite rules 
-		#Script ReWriteRules
-		#{
-		#	#Adds rewrite allowedServerVariables to applicationHost.config
-		#	DependsOn = "[Package]UrlRewrite"
-		#	SetScript = {
-		#		$current = Get-WebConfiguration /system.webServer/rewrite/allowedServerVariables | select -ExpandProperty collection | ?{$_.ElementTagName -eq "add"} | select -ExpandProperty name
-		#		$expected = @("HTTPS", "HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED_PROTO", "REMOTE_ADDR")
-		#		$missing = $expected | where {$current -notcontains $_}
-		#		try
-		#		{
-		#			Start-WebCommitDelay 
-		#			$missing | %{ Add-WebConfiguration /system.webServer/rewrite/allowedServerVariables -atIndex 0 -value @{name="$_"} -Verbose }
-		#			Stop-WebCommitDelay -Commit $true 
-		#		} 
-		#		catch [System.Exception]
-		#		{ 
-		#			$_ | Out-String
-		#		}
-		#	}
-		#	TestScript = {
-		#		$current = Get-WebConfiguration /system.webServer/rewrite/allowedServerVariables | select -ExpandProperty collection | select -ExpandProperty name
-		#		$expected = @("HTTPS", "HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED_PROTO", "REMOTE_ADDR")
-		#		$result = -not @($expected| where {$current -notcontains $_}| select -first 1).Count
-		#		return $result
-		#	}
-		#	GetScript = {
-		#		$allowedServerVariables = Get-WebConfiguration /system.webServer/rewrite/allowedServerVariables | select -ExpandProperty collection
-		#		return $allowedServerVariables
-		#	}
-		#}
-
-		# Install SSL Certificate
-		#Script DeployAppCert
-  #      {
-  #          SetScript =  {
-		#	Import-PfxCertificate -FilePath \\XXXdemoad01\source\certs\MyWebAppCert.pfx -CertStoreLocation Cert:\LocalMachine\WebHosting
-		#	}
-  #          TestScript = "try { (Get-Item Cert:\LocalMachine\WebHosting\C534DFBFE8DB597F22320682F7BBFBA2611DC45A -ErrorAction Stop).HasPrivateKey} catch { `$False }"
-  #          GetScript = {
-		#		@{Ensure = if ((Get-Item Cert:\LocalMachine\WebHosting\C534DFBFE8DB597F22320682F7BBFBA2611DC45A -ErrorAction SilentlyContinue).HasPrivateKey) 
-  #            {'Present'} 
-  #            else {'Absent'}}
-		#	  }
-  #          DependsOn = "[WindowsFeature]WebServerRole"
-  #      }
-
-		# Copy the website content 
-		File WebContent 
-		{ 
-			Ensure          = "Present" 
-			SourcePath      = "C:\WebApp"
-			DestinationPath = "C:\Inetpub\wwwroot"
-			Recurse         = $true 
-			Type            = "Directory" 
-			DependsOn       = "[Script]DeployWebPackage" 
-		}		
-		
+     WindowsFeature WebServerManagementConsole
+    {
+        Name = "Web-Mgmt-Console"
+        Ensure = "Present"
+    }
   }
-}
+} 
       Archive nexus {  
         Ensure = 'Present'  
         Path = 'D:\nexus-3.14.0-04-win64.zip'  
