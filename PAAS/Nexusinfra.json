@@ -620,36 +620,35 @@
       },
       
       {
-        "type": "Microsoft.Compute/virtualMachines/extensions",
-        "name": "[concat(parameters('virtualMachineName'),'/', 'MyDSCConfig')]",
-        "apiVersion": "2015-06-15",
-        "location": "[resourceGroup().location]",
-        "dependsOn": [
-          "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
-        ],
-        "properties": {
-          "publisher": "Microsoft.Powershell",
-          "type": "DSC",
-          "typeHandlerVersion": "2.19",
-          "autoUpgradeMinorVersion": true,
-          "settings": {
-            "ModulesUrl": "https://raw.githubusercontent.com/amitanilsinha/NEXUS/master/PAAS/IIS.zip",
-            "script": "IIS.ps1",
-            "ConfigurationFunction": "Configure IIS",
-            "Properties": {
-              "MachineName": "[parameters('virtualMachineName')]",
-              "WebSitePrefix":"WebsitePrefix",
-              "DevPublicDNS":"DevPublicDNS",
-              "UatPublicDNS":"UatPublicDNS",
-              "ProdPublicDNS":"ProdPublicDNS"
-            }
-          },
-          "protectedSettings": {
-                        "configurationUrlSasToken": "[parameters('_artifactsLocationSasToken')]"
-                    }
-        }
-  }
-  
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('virtualMachineName'),'/', 'MyDSCConfig')]",
+      "apiVersion": "2015-06-15",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Powershell",
+        "type": "DSC",
+        "typeHandlerVersion": "2.19",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "ModulesUrl": "https://YourConfigZipfileURL/Configure-SomeDSC.zip",
+          "ConfigurationFunction": "Configure-SomeDSC.ps1\\Configure-SomeDSC",
+          "Properties": {
+            "MachineName": "[parameters('virtualMachineName')]",
+            "WebSitePrefix":"WebsitePrefix",
+            "DevPublicDNS":"DevPublicDNS",
+            "UatPublicDNS":"UatPublicDNS",
+            "ProdPublicDNS":"ProdPublicDNS"
+          }
+        },
+        "protectedSettings": {
+                      "configurationUrlSasToken": "[parameters('_artifactsLocationSasToken')]"
+                  }
+      }
+}
+
       
   
     ]
