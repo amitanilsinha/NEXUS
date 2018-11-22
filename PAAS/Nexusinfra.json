@@ -621,27 +621,35 @@
       
       {
         "type": "Microsoft.Compute/virtualMachines/extensions",
-        "name": "[concat(variables('jumpvmNamePrefix'),'/Microsoft.Powershell.DSC')]",
-        "apiVersion": "2018-04-01",
+        "name": "[concat(parameters('virtualMachineName'),'/', 'MyDSCConfig')]",
+        "apiVersion": "2015-06-15",
         "location": "[resourceGroup().location]",
-        "comments": "Adding custom extention for hardening software server",
         "dependsOn": [
-            "[concat('Microsoft.Compute/virtualMachines/', variables('jumpvmNamePrefix'))]"
+          "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
         ],
         "properties": {
-            "publisher": "Microsoft.Powershell",
-            "type": "DSC",
-            "typeHandlerVersion": "2.76",
-            "autoUpgradeMinorVersion": true,
-            "settings": {
-              "configuration": {
-                "url": "https://raw.githubusercontent.com/amitanilsinha/NEXUS/master/PAAS/hardening.zip",
-                "script": "hardening.ps1",
-                "function": "hardening"
-              }
+          "publisher": "Microsoft.Powershell",
+          "type": "DSC",
+          "typeHandlerVersion": "2.19",
+          "autoUpgradeMinorVersion": true,
+          "settings": {
+            "ModulesUrl": "https://raw.githubusercontent.com/amitanilsinha/NEXUS/master/PAAS/IIS.zip",
+            "script": "IIS.ps1",
+            "ConfigurationFunction": "Configure IIS",
+            "Properties": {
+              "MachineName": "[parameters('virtualMachineName')]",
+              "WebSitePrefix":"WebsitePrefix",
+              "DevPublicDNS":"DevPublicDNS",
+              "UatPublicDNS":"UatPublicDNS",
+              "ProdPublicDNS":"ProdPublicDNS"
             }
+          },
+          "protectedSettings": {
+                        "configurationUrlSasToken": "[parameters('_artifactsLocationSasToken')]"
+                    }
         }
-      }
+  }
+  
       
   
     ]
