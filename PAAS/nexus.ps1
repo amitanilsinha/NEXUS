@@ -46,27 +46,8 @@ Configuration Installartifactory {
         Destination = 'D:\'  
         DependsOn = '[Script]Download-Software'  
       }
-      #Install the IIS Role
-    WindowsFeature IIS
-    {
-      Ensure = “Present”
-      Name = “Web-Server”
     }
-
-    #Install ASP.NET 4.5
-    WindowsFeature ASP
-    {
-      Ensure = “Present”
-      Name = “Web-Asp-Net45”
-    }
-
-     WindowsFeature WebServerManagementConsole
-    {
-        Name = "Web-Mgmt-Console"
-        Ensure = "Present"
-    }
-   
-      Archive nexus {  
+     Archive nexus {  
         Ensure = 'Present'  
         Path = 'D:\nexus-3.14.0-04-win64.zip'  
         Destination = 'D:\'  
