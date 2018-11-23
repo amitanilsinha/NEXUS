@@ -194,7 +194,6 @@
       "frontEndIPConfigID": "[concat(variables('lbID'),'/frontendIPConfigurations/LoadBalancerFrontEnd')]",
       "networkSecurityGroupName": "[toLower(concat(parameters('softnetworknsg'), uniqueString(resourceGroup().id)))]",
       "lbPoolID": "[concat(variables('lbID'),'/backendAddressPools/BackendPool1')]",
-      "lbProbeIDj": "[concat(variables('lbID'),'/probes/Nexus')]",
       "lbProbeIDa": "[concat(variables('lbID'),'/probes/artifactory')]"
     },
     "resources": [
@@ -571,7 +570,7 @@
       "autoUpgradeMinorVersion": true,
       "settings": {
         "configuration": {
-          "url": "https://raw.githubusercontent.com/amitanilsinha/NEXUS/master/PAAS/nexus.zip",
+          "url": "https://github.corp.globant.com/raw/kunal-maldahiyar/Artifactory/master/nexus.zip?token=AAAGeYMCmexNDa8ClfxyHPsjyAG6FFrEks5b-92-wA%3D%3D",
           "script": "nexus.ps1",
           "function": "Installartifactory"
         }
@@ -634,7 +633,7 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "configuration": {
-                "url": "https://raw.githubusercontent.com/amitanilsinha/NEXUS/master/PAAS/hardening.zip",
+                "url": "https://github.corp.globant.com/raw/kunal-maldahiyar/Artifactory/master/hardening.zip?token=AAAGeSWH_uOF5V4Gc3ReMb7i_wvveUhcks5b-93rwA%3D%3D",
                 "script": "hardening.ps1",
                 "function": "hardening"
               }
