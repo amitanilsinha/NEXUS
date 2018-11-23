@@ -45,11 +45,8 @@ Configuration Installartifactory {
         Path = 'D:\artifactory-oss-6.5.2.zip'  
         Destination = 'D:\'  
         DependsOn = '[Script]Download-Software'  
-      
-      Configuration ContosoWebsite
-{
-  
- Archive nexus {  
+      }
+      Archive nexus {  
         Ensure = 'Present'  
         Path = 'D:\nexus-3.14.0-04-win64.zip'  
         Destination = 'D:\'  
