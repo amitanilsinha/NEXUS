@@ -46,9 +46,7 @@ Configuration Installartifactory {
         Destination = 'D:\'  
         DependsOn = '[Script]Download-Software'  
       }
-      Configuration ContosoWebsite
-{
-  
+      
   #Install the IIS Role
           WindowsFeature IIS
          {
@@ -140,11 +138,6 @@ Configuration Installartifactory {
                                 )
             DependsOn       = '[File]prodfolder'
          }
-
-  }
-} 
-
-} 
       Archive nexus {  
         Ensure = 'Present'  
         Path = 'D:\nexus-3.14.0-04-win64.zip'  
