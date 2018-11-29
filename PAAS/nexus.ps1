@@ -22,26 +22,6 @@ Configuration Installartifactory {
                 $Status -eq $True
             }
         }
-		#Install the IIS Role
-    WindowsFeature IIS
-    {
-      Ensure = “Present”
-      Name = “Web-Server”
-    }
-
-    #Install ASP.NET 4.5
-    WindowsFeature ASP
-    {
-      Ensure = “Present”
-      Name = “Web-Asp-Net45”
-    }
-
-     WindowsFeature WebServerManagementConsole
-    {
-        Name = "Web-Mgmt-Console"
-        Ensure = "Present"
-    }
-  
       Script Download-Software {  
         GetScript = {  
           @{Result = Test-Path 'D:\nexus-3.14.0-04-win64.zip'}
