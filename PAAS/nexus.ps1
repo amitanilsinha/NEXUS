@@ -22,6 +22,7 @@ Configuration Installartifactory {
                 $Status -eq $True
             }
         }
+		
       Script Download-Software {  
         GetScript = {  
           @{Result = Test-Path 'D:\nexus-3.14.0-04-win64.zip'}
@@ -69,6 +70,17 @@ Configuration Installartifactory {
           Arguments       = '/run'
           ProductId       = ''
           DependsOn       = '[Script]Download-Software'
+		  
+		  #Install IIS server role
+    WindowsFeature IIS {
+      Ensure = "Present"
+      Name =  "Web-Server"
+    }
+    #Install ASP role
+    WindowsFeature AspNet45 {
+      Ensure = "Present"
+      Name = "Web-Asp-Net45"
+	  
       }
     }  
 }
