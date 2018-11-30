@@ -74,7 +74,7 @@ Configuration Installartifactory {
 		  
 	   }
 	   
-    }  
+	   
 	     #Install the IIS Role
     WindowsFeature IIS
     {
@@ -94,4 +94,5 @@ Configuration Installartifactory {
         Name = "Web-Mgmt-Console"
         Ensure = "Present"
 	}
+    }
 }
