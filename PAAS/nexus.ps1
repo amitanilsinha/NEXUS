@@ -22,8 +22,6 @@ Configuration Installartifactory {
                 $Status -eq $True
             }
         }
-		
-  }
       Script Download-Software {  
         GetScript = {  
           @{Result = Test-Path 'D:\nexus-3.14.0-04-win64.zip'}
