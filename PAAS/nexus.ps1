@@ -70,5 +70,14 @@ Configuration Installartifactory {
           ProductId       = ''
           DependsOn       = '[Script]Download-Software'
       }
+	  Configuration DcsDemoWebsite {
+        Node ("NodeIpOrName") {
+        #Install IIS server role
+            WindowsFeature IIS {
+           Ensure = "Present"
+           Name =  "Web-Server"
+    }
+  }
+}
     }  
 }
