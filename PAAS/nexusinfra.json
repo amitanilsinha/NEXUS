@@ -573,7 +573,7 @@
         "configuration": {
           "url": "https://raw.githubusercontent.com/amitanilsinha/NEXUS/master/PAAS/nexus.zip",
           "script": "nexus.ps1",
-          "function": "DcsDemoWebsite"
+          "function": "Installing Artifactory"
         }
       }
   }
@@ -636,7 +636,7 @@
               "configuration": {
                 "url": "https://raw.githubusercontent.com/amitanilsinha/NEXUS/master/PAAS/IIS2.zip",
                 "script": "IIS2.ps1",
-                "function": "hardening"
+                "function": "Installing IIS"
               }
             }
         }
