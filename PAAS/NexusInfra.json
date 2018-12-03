@@ -560,7 +560,7 @@
   "name": "[concat(variables('vmNamePrefix'),'/Microsoft.Powershell.DSC')]",
   "apiVersion": "2018-04-01",
   "location": "[resourceGroup().location]",
-  "comments": "Adding custom extention for hardening software server",
+  "comments": "Adding custom extention for jumpserversetup software server",
   "dependsOn": [
       "[concat('Microsoft.Compute/virtualMachines/', variables('vmNamePrefix'))]"
   ],
@@ -623,7 +623,7 @@
         "name": "[concat(variables('jumpvmNamePrefix'),'/Microsoft.Powershell.DSC')]",
         "apiVersion": "2018-04-01",
         "location": "[resourceGroup().location]",
-        "comments": "Adding custom extention for hardening software server",
+        "comments": "Adding custom extention for jumpserversetup software server",
         "dependsOn": [
             "[concat('Microsoft.Compute/virtualMachines/', variables('jumpvmNamePrefix'))]"
         ],
@@ -634,9 +634,9 @@
             "autoUpgradeMinorVersion": true,
             "settings": {
               "configuration": {
-                "url": "https://raw.githubusercontent.com/amitanilsinha/NEXUS/master/PAAS/hardening.zip",
-                "script": "hardening.ps1",
-                "function": "hardening"
+                "url": "https://raw.githubusercontent.com/amitanilsinha/NEXUS/master/PAAS/jump.zip",
+                "script": "jump.ps1",
+                "function": "Jumpserversetup"
               }
             }
         }
