@@ -12,9 +12,12 @@
 		[string] $softwareURI,
 		[string] $softwareSasToken
 	  )
-
-	  Import-DscResource -ModuleName 'ComputerManagement'
-	  Import-DscResource -ModuleName 'PSDesiredStateConfiguration'
+	 
+      Install-Module -ModuleName 'xPSDesiredStateConfiguration' -Force 
+      Install-Module -ModuleName 'xComputerManagement' -Force
+	  
+	  Import-DscResource -ModuleName 'xComputerManagement'
+	  Import-DscResource -ModuleName 'xPSDesiredStateConfiguration'
 
 	  Set-Item -Path WSMan:\localhost\MaxEnvelopeSizeKb -Value 30720
 
