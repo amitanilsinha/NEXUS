@@ -15,8 +15,6 @@ Configuration JumpServer
 
   Import-DscResource -ModuleName xComputerManagement
   Import-DscResource -ModuleName xPSDesiredStateConfiguration
-  Import-DscResource -ModuleName AuditPolicyDsc
-  Import-DscResource -ModuleName SecurityPolicyDsc
 
   Set-Item -Path WSMan:\localhost\MaxEnvelopeSizeKb -Value 30720
 
@@ -65,22 +63,6 @@ Configuration JumpServer
         $global:DSCMachineStatus = 1
       }
       DependsOn = "[xRegistry]DisableIPv6"
-    }
-    
-      Script ForceDNSRegistration {
-      DependsOn = "[xComputer]DomainJoin"
-      GetScript = {
-        $Result=(-not ([bool](Get-WmiObject Win32_NetworkAdapterConfiguration -filter "ipenabled = 'true'" | where { ($_.FullDNSRegistrationEnabled -ne "True") -OR ($_.DomainDNSRegistrationEnabled -ne "True") })))
-        return @{"Result"=$Result}
-      }
-      TestScript = {
-        $Result=(-not ([bool](Get-WmiObject Win32_NetworkAdapterConfiguration -filter "ipenabled = 'true'" | where { ($_.FullDNSRegistrationEnabled -ne "True") -OR ($_.DomainDNSRegistrationEnabled -ne "True") })))
-        return $Result
-      }
-      SetScript = {
-        Get-WmiObject Win32_NetworkAdapterConfiguration -filter "ipenabled = 'true'" | foreach-object { $_.SetDynamicDNSRegistration($true,$true) }
-        Start-Process -FilePath "$Env:SystemRoot\System32\ipconfig.exe" -ArgumentList "/registerdns" -Wait
-      }
     }
   }
 }
