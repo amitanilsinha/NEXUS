@@ -558,7 +558,7 @@
   {
   "type": "Microsoft.Compute/virtualMachines/extensions",
   "name": "[concat(variables('vmNamePrefix'),'/Microsoft.Powershell.DSC')]",
-  "apiVersion": "2018-06-01",
+  "apiVersion": "2018-04-01",
   "location": "[resourceGroup().location]",
   "comments": "Adding custom extention for hardening software server",
   "dependsOn": [
@@ -621,7 +621,7 @@
       {
         "type": "Microsoft.Compute/virtualMachines/extensions",
         "name": "[concat(variables('jumpvmNamePrefix'),'/Microsoft.Powershell.DSC')]",
-        "apiVersion": "2018-06-01",
+        "apiVersion": "2018-04-01",
         "location": "[resourceGroup().location]",
         "comments": "Adding custom extention for hardening software server",
         "dependsOn": [
