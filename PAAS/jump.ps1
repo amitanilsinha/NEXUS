@@ -1,4 +1,4 @@
-Configuration JumpServer
+Configuration Hardening
 {
   Param(
     [Parameter(Mandatory)]
