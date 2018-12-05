@@ -9,10 +9,15 @@ Configuration JumpServer
     [string] $DomainNetBiosName,
     [string] $LocalAdministratorName,
     [Parameter(Mandatory)]
-    )
+    [string] $softwareURI,
+    [string] $softwareSasToken
+  )
 
   Import-DscResource -ModuleName xComputerManagement
   Import-DscResource -ModuleName xPSDesiredStateConfiguration
+  Import-DscResource -ModuleName AuditPolicyDsc
+  Import-DscResource -ModuleName SecurityPolicyDsc
+
   Set-Item -Path WSMan:\localhost\MaxEnvelopeSizeKb -Value 30720
 
   [System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainNetBiosName}\$($AdminCredentials.UserName)", $AdminCredentials.Password)
@@ -61,5 +66,37 @@ Configuration JumpServer
       }
       DependsOn = "[xRegistry]DisableIPv6"
     }
+
+    xComputer DomainJoin
+    {
+      Name = $env:COMPUTERNAME
+      DomainName = $DomainName
+      Credential = $DomainCreds
+      DependsOn = "[xScript]Disable6to4"
+    }
+
+    Script ForceDNSRegistration {
+      DependsOn = "[xComputer]DomainJoin"
+      GetScript = {
+        $Result=(-not ([bool](Get-WmiObject Win32_NetworkAdapterConfiguration -filter "ipenabled = 'true'" | where { ($_.FullDNSRegistrationEnabled -ne "True") -OR ($_.DomainDNSRegistrationEnabled -ne "True") })))
+        return @{"Result"=$Result}
+      }
+      TestScript = {
+        $Result=(-not ([bool](Get-WmiObject Win32_NetworkAdapterConfiguration -filter "ipenabled = 'true'" | where { ($_.FullDNSRegistrationEnabled -ne "True") -OR ($_.DomainDNSRegistrationEnabled -ne "True") })))
+        return $Result
+      }
+      SetScript = {
+        Get-WmiObject Win32_NetworkAdapterConfiguration -filter "ipenabled = 'true'" | foreach-object { $_.SetDynamicDNSRegistration($true,$true) }
+        Start-Process -FilePath "$Env:SystemRoot\System32\ipconfig.exe" -ArgumentList "/registerdns" -Wait
+      }
+    }
+
+    xWindowsFeature DnsTools
+		{
+			Ensure = "Present"
+      Name = "RSAT-DNS-Server"
+      DependsOn = "[xComputer]DomainJoin"
+    }
   }
 }
+
