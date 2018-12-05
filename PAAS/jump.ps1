@@ -13,8 +13,8 @@ Configuration Hardening
     [string] $softwareSasToken
   )
 
-  Import-DscResource -ModuleName xComputerManagement
-  Import-DscResource -ModuleName xPSDesiredStateConfiguration
+  Import-DscResource -ModuleName ComputerManagement
+  Import-DscResource -ModuleName PSDesiredStateConfiguration
 
   Set-Item -Path WSMan:\localhost\MaxEnvelopeSizeKb -Value 30720
 
