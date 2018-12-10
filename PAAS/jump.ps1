@@ -1,23 +1,6 @@
 	Configuration Hardening
 	{
-	  Param(
-		[Parameter(Mandatory)]
-		[string] $DomainName,
-		[Parameter(Mandatory)]
-		[System.Management.Automation.PSCredential] $AdminCredentials,
-		[Parameter(Mandatory)]
-		[string] $DomainNetBiosName,
-		[string] $LocalAdministratorName,
-		[Parameter(Mandatory)]
-		[string] $softwareURI,
-		[string] $softwareSasToken
-	  )
-	 
-          Set-Item -Path WSMan:\localhost\MaxEnvelopeSizeKb -Value 30720
-
-	  [System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainNetBiosName}\$($AdminCredentials.UserName)", $AdminCredentials.Password)
-	  [System.Management.Automation.PSCredential]$LocalAdmin = New-Object System.Management.Automation.PSCredential ($LocalAdministratorName, (ConvertTo-SecureString (New-Password) -AsPlain -Force))
-
+	  
 	  Node localhost
 	  {
 		LocalConfigurationManager 
