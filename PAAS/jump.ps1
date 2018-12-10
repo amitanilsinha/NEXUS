@@ -26,7 +26,7 @@
 		  RebootNodeIfNeeded = $true
 		}
 
-		xScript TurnOffFirewall
+		Script TurnOffFirewall
 		{
 		  GetScript = {@{}}
 		  TestScript = {
@@ -38,7 +38,7 @@
 		  }
 		}
 
-		xRegistry DisableIPv6 {
+		Registry DisableIPv6 {
 		  Key = "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters"
 		  ValueName = "DisabledComponents"
 		  Ensure = "Present"
@@ -47,7 +47,7 @@
 		  Force = $true
 		}
 
-		xScript Disable6to4 {
+		Script Disable6to4 {
 		  GetScript = {
 			$result = (Get-Net6to4Configuration).State -eq 'Disabled'
 			return @{"Result"=$result}
