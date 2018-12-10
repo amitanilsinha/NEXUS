@@ -13,11 +13,13 @@
 		[string] $softwareSasToken
 	  )
 	 
-      Install-Module -ModuleName 'xPSDesiredStateConfiguration' -Force 
-      Install-Module -ModuleName 'xComputerManagement' -Force
-	  
-	  Import-DscResource -ModuleName 'xComputerManagement'
-	  Import-DscResource -ModuleName 'xPSDesiredStateConfiguration'
+      Install-Module -name 'XPSDesiredStateConfiguration' -Force
+      Install-Module -Name 'xComputerManagement' -Force 
+      Install-Module -Name 'xWindowsUpdate' -Force 
+
+      Import-Module -Name 'xWindowsUpdate' -force
+      Import-Module -Name 'xComputerManagement' -force
+      Import-Module -name 'XPSDesiredStateConfiguration' -force
 
 	  Set-Item -Path WSMan:\localhost\MaxEnvelopeSizeKb -Value 30720
 
