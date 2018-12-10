@@ -59,7 +59,7 @@
 			Set-Net6to4Configuration -State Disabled
 			$global:DSCMachineStatus = 1
 		  }
-		  DependsOn = "[xRegistry]DisableIPv6"
+		  DependsOn = "[Registry]DisableIPv6"
 		}
 	  }
 	}
