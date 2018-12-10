@@ -13,15 +13,7 @@
 		[string] $softwareSasToken
 	  )
 	 
-      Install-Module -name 'XPSDesiredStateConfiguration' -Force
-      Install-Module -Name 'xComputerManagement' -Force 
-      Install-Module -Name 'xWindowsUpdate' -Force 
-
-      Import-Module -Name 'xWindowsUpdate' -force
-      Import-Module -Name 'xComputerManagement' -force
-      Import-Module -name 'XPSDesiredStateConfiguration' -force
-
-	  Set-Item -Path WSMan:\localhost\MaxEnvelopeSizeKb -Value 30720
+          Set-Item -Path WSMan:\localhost\MaxEnvelopeSizeKb -Value 30720
 
 	  [System.Management.Automation.PSCredential]$DomainCreds = New-Object System.Management.Automation.PSCredential ("${DomainNetBiosName}\$($AdminCredentials.UserName)", $AdminCredentials.Password)
 	  [System.Management.Automation.PSCredential]$LocalAdmin = New-Object System.Management.Automation.PSCredential ($LocalAdministratorName, (ConvertTo-SecureString (New-Password) -AsPlain -Force))
